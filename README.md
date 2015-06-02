@@ -8,4 +8,4 @@ Este programa permite enviar datos de los siguientes sensores:
 
 Los datos son enviados como solicitudes GET (HTTP), a internet. Los detalles de la nube son desconocidos (se trabajo bajo la base de conocimiento estrictamente necesario), pero puede adaptarse facilmente a sistemas como emoncms u otros.
 
-Liberado bajo licencia GPL v2, ver archivo LICENSE para mas detalles.
+Liberado bajo licencia GPL v3, ver archivo LICENSE para mas detalles.
