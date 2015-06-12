@@ -32,9 +32,9 @@ const int puertoServidor = 80;
 //Descomentar las siguientes definiciones para habilitar los sensores
 //correspondientes. Comentar la definicion implica que no se usara el sensor ni
 //se enviaran sus datos.
-#define SENSOR_DS18B20
+//#define SENSOR_DS18B20
 //#define SENSOR_DHT22
-//#define SENSOR_MQ2
+#define SENSOR_MQ2
 
 //Definiciones de los pines de los diferentes perifericos (no comentar aunque no
 //se usen)
@@ -44,9 +44,9 @@ const int pinMQ2 = 0;       //Numero de pin analogico
 
 //Descomentar para habilitar rutinas (para uso normal deben estar
 //comentadas todas excepto la de envio de datos por wifi)
-#define ENVIAR_DATOS_WIFI
+//#define ENVIAR_DATOS_WIFI
 //#define PUENTE_SERIAL_ESP8266
-//#define MOSTRAR_DATOS_SENSORES
+#define MOSTRAR_DATOS_SENSORES
 
 //FIN DE LOS PARAMETROS CONFIGURABLES
 //--------------------------------------------------------------------------------
@@ -106,7 +106,9 @@ char coreID[17];
 
 //--------------------------------------------------------------------------------
 #ifdef SENSOR_MQ2
-  int ppm_MQ2 = 0;
+  #include "SensorGas.h"
+  unsigned long ppm_MQ2 = 0;
+  SensorGas sensorMQ2(MQ2, pinMQ2);
 #endif
 
 //--------------------------------------------------------------------------------
@@ -123,41 +125,43 @@ void setup(void) {
   }
 
   //Se conecta con la red WiFi
-  for (;;) {
-    Serial.print(F("Conectandose a la red \""));
-    Serial.print(FSH(AP));
-    Serial.print(F("\"... "));
-    if (esp8266.conectarAP(FSH(AP), FSH(CLAVE)))
-      { Serial.println(F("OK")); break; }
-    else
-      Serial.println(F("Error al conectarse a la red"));
-  }
+  #ifdef ENVIAR_DATOS_WIFI
+    for (;;) {
+      Serial.print(F("Conectandose a la red \""));
+      Serial.print(FSH(AP));
+      Serial.print(F("\"... "));
+      if (esp8266.conectarAP(FSH(AP), FSH(CLAVE)))
+        { Serial.println(F("OK")); break; }
+      else
+        Serial.println(F("Error al conectarse a la red"));
+    }
 
-  //Obtiene las direcciones IP y MAC del modulo WiFi
-  esp8266.leerIP(dirIP);
-  esp8266.leerMAC(dirMAC);
+    //Obtiene las direcciones IP y MAC del modulo WiFi
+    esp8266.leerIP(dirIP);
+    esp8266.leerMAC(dirMAC);
 
-  //Imprime las direcciones en la terminal serie
-  Serial.print(F("Direccion IP: "));
-  Serial.print(dirIP[0]); Serial.print(F("."));
-  Serial.print(dirIP[1]); Serial.print(F("."));
-  Serial.print(dirIP[2]); Serial.print(F("."));
-  Serial.print(dirIP[3]); Serial.println(F(""));
+    //Imprime las direcciones en la terminal serie
+    Serial.print(F("Direccion IP: "));
+    Serial.print(dirIP[0]); Serial.print(F("."));
+    Serial.print(dirIP[1]); Serial.print(F("."));
+    Serial.print(dirIP[2]); Serial.print(F("."));
+    Serial.print(dirIP[3]); Serial.println(F(""));
 
-  Serial.print(F("Direccion MAC: "));
-  Serial.print(dirMAC[0], HEX); Serial.print(F(":"));
-  Serial.print(dirMAC[1], HEX); Serial.print(F(":"));
-  Serial.print(dirMAC[2], HEX); Serial.print(F(":"));
-  Serial.print(dirMAC[3], HEX); Serial.print(F(":"));
-  Serial.print(dirMAC[4], HEX); Serial.print(F(":"));
-  Serial.print(dirMAC[5], HEX); Serial.println(F(""));
+    Serial.print(F("Direccion MAC: "));
+    Serial.print(dirMAC[0], HEX); Serial.print(F(":"));
+    Serial.print(dirMAC[1], HEX); Serial.print(F(":"));
+    Serial.print(dirMAC[2], HEX); Serial.print(F(":"));
+    Serial.print(dirMAC[3], HEX); Serial.print(F(":"));
+    Serial.print(dirMAC[4], HEX); Serial.print(F(":"));
+    Serial.print(dirMAC[5], HEX); Serial.println(F(""));
 
-  //Calcula el core ID de esta unidad
-  calcularCoreID();
+    //Calcula el core ID de esta unidad
+    calcularCoreID();
 
-  //Imprime el resultado
-  Serial.print(F("Core ID: "));
-  Serial.println(coreID);
+    //Imprime el resultado
+    Serial.print(F("Core ID: "));
+    Serial.println(coreID);
+  #endif
 
   //Inicializa el sensor de temperatura DS18B20
   #ifdef SENSOR_DS18B20
@@ -182,7 +186,9 @@ void loop(void) {
   #endif
 
   #ifdef SENSOR_MQ2
-    ppm_MQ2 = analogRead(0);
+    if (!sensorMQ2.estaCalibrado()) sensorMQ2.calibrar();
+    //ppm_MQ2 = analogRead(0);
+    ppm_MQ2 = sensorMQ2.leerPPM();
   #endif
 
   //Se muestran por terminal serie los valores de los sensores

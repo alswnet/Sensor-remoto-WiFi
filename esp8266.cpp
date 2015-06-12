@@ -1,5 +1,9 @@
 #include "esp8266.h"
 
+//Descomentar para hacer que los datos seriales provenientes del esp8266 sean
+//enviados a la terminal serie para depuracion
+//#define DEPURACION_SERIAL_ESP8266
+
 //Tiempo maximo a esperar el modulo para que termine los comandos
 const unsigned long timeout = 16000;  //Maximo de 16s
 
@@ -15,8 +19,13 @@ bool ESP8266::reset() {
   //Espera la respuesta "ready"
   if (!esperarRespuesta(F("\nready\r\n"))) return false;
 
-  //Apaga el eco del modulo wifi
-  swSerial->print(F("ATE0\r\n"));
+  #ifndef DEPURACION_SERIAL_ESP8266
+    //Apaga el eco del modulo wifi
+    swSerial->print(F("ATE0\r\n"));
+  #else
+    //Apaga el eco del modulo wifi
+    swSerial->print(F("ATE1\r\n"));
+  #endif
 
   //Espera la respuesta "OK"
   if (!esperarRespuesta(F("\nOK\r\n"))) return false;
@@ -28,6 +37,10 @@ bool ESP8266::reset() {
 bool ESP8266::conectarAP(const __FlashStringHelper *ap,
                          const __FlashStringHelper* clave)
 {
+  //Envia el comando de modo de conexion para configurarse como cliente (STA)
+  swSerial->print(F("AT+CWMODE=1\r\n"));
+  if (!esperarRespuesta(F("\nOK\r\n"))) return false;
+
   //Envia el comando de conexion a access point, seguido del nombre del AP y
   //de la clave
   swSerial->print(F("AT+CWJAP=\""));
@@ -180,7 +193,9 @@ bool ESP8266::esperarRespuesta(const __FlashStringHelper *resp) {
       //Si los hay, toma el siguiente
       c = swSerial->read();
 
-      Serial.write(c);  //Depuracion solamente
+      #ifdef DEPURACION_SERIAL_ESP8266
+        Serial.write(c);  //Depuracion solamente
+      #endif
 
       //Verifica si coincide con el siguiente en la cadena
       if (c == pgm_read_byte(cadResp + pResp))
