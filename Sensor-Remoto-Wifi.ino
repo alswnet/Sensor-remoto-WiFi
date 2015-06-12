@@ -288,6 +288,7 @@ bool enviarDato(char *nombre, char *valor) {
   }
 
   if (!esp8266.enviar(F("GET /test/insertar?name="))) {
+  //if (!esp8266.enviar(F("GET /stest.php?name="))) {
     Serial.println(F("Error al enviar datos"));
     esp8266.desconectar();
     return false;
