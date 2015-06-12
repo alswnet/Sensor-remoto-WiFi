@@ -26,14 +26,15 @@ PROGMEM const char AP[] = "icon";
 PROGMEM const char CLAVE[] = "68b369b8ed";
 
 //Configuraciones del servidor remoto
-PROGMEM const char servidor[] = "luihost.webgatenetworks.com";
+PROGMEM const char servidor[] = "project.sitec.com.sv";
+//PROGMEM const char servidor[] = "luihost.webgatenetworks.com";
 const int puertoServidor = 80;
 
 //Descomentar las siguientes definiciones para habilitar los sensores
 //correspondientes. Comentar la definicion implica que no se usara el sensor ni
 //se enviaran sus datos.
 //#define SENSOR_DS18B20
-//#define SENSOR_DHT22
+#define SENSOR_DHT22
 #define SENSOR_MQ2
 
 //Definiciones de los pines de los diferentes perifericos (no comentar aunque no
@@ -286,7 +287,7 @@ bool enviarDato(char *nombre, char *valor) {
     return false;
   }
 
-  if (!esp8266.enviar(F("GET /stest.php?name="))) {
+  if (!esp8266.enviar(F("GET /test/insertar?name="))) {
     Serial.println(F("Error al enviar datos"));
     esp8266.desconectar();
     return false;
