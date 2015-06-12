@@ -12,5 +12,7 @@ Dependencias
 ------------
 Para poder compilar este sketch, es necesario instalar en Arduino IDE la libreria One Wire de Jim Studt
 http://www.pjrc.com/teensy/td_libs_OneWire.html
+Tambien es necesario instalar la libreria del sensor de humedad y temperatura DHT22 de Adafruit
+https://github.com/adafruit/DHT-sensor-library
 
 Liberado bajo licencia GPL v3, ver archivo LICENSE para mas detalles.
