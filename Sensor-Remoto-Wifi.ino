@@ -187,9 +187,8 @@ void loop(void) {
   #endif
 
   #ifdef SENSOR_MQ2
-    if (!sensorMQ2.estaCalibrado()) sensorMQ2.calibrar();
-    //ppm_MQ2 = analogRead(0);
-    ppm_MQ2 = sensorMQ2.leerPPM();
+    sensorMQ2.atender();
+    if (sensorMQ2.estaListo()) ppm_MQ2 = sensorMQ2.leerPPM(HUMO);
   #endif
 
   //Se muestran por terminal serie los valores de los sensores
@@ -203,7 +202,7 @@ void loop(void) {
     #ifdef SENSOR_DHT22
       Serial.print(F("DHT 22: "));
       Serial.print(temp_DHT22);
-      Serial.print(F("C, "));
+      Serial.print(F("C/"));
       Serial.print(hum_DHT22);
       Serial.print(F("%   "));
     #endif
