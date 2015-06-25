@@ -26,7 +26,7 @@ PROGMEM const char AP[] = "icon";
 PROGMEM const char CLAVE[] = "68b369b8ed";
 
 //Configuraciones del servidor remoto
-PROGMEM const char servidor[] = "project.sitec.com.sv";
+PROGMEM const char servidor[] = "45.40.135.188";
 //PROGMEM const char servidor[] = "luihost.webgatenetworks.com";
 const int puertoServidor = 80;
 
@@ -45,7 +45,7 @@ const int pinMQ2 = 0;       //Numero de pin analogico
 
 //Descomentar para habilitar rutinas (para uso normal deben estar
 //comentadas todas excepto la de envio de datos por wifi)
-//#define ENVIAR_DATOS_WIFI
+#define ENVIAR_DATOS_WIFI
 //#define PUENTE_SERIAL_ESP8266
 #define MOSTRAR_DATOS_SENSORES
 
