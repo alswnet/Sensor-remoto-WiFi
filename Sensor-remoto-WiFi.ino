@@ -33,9 +33,9 @@ const int puertoServidor = 80;
 //Descomentar las siguientes definiciones para habilitar los sensores
 //correspondientes. Comentar la definicion implica que no se usara el sensor ni
 //se enviaran sus datos.
-//#define SENSOR_DS18B20
-#define SENSOR_DHT22
-#define SENSOR_MQ2
+#define SENSOR_DS18B20
+//#define SENSOR_DHT22
+//#define SENSOR_MQ2
 
 //Definiciones de los pines de los diferentes perifericos (no comentar aunque no
 //se usen)
@@ -286,7 +286,7 @@ bool enviarDato(char *nombre, char *valor) {
     return false;
   }
 
-  if (!esp8266.enviar(F("GET /test/insertar?name="))) {
+  if (!esp8266.enviar(F("GET /project/app/test/insertar?name="))) {
   //if (!esp8266.enviar(F("GET /stest.php?name="))) {
     Serial.println(F("Error al enviar datos"));
     esp8266.desconectar();
