@@ -20,22 +20,30 @@
 //INICIO DE LOS PARAMETROS CONFIGURABLES
 
 //Configuraciones de la red WiFi
-//PROGMEM const char AP[] = "ALSW";
-PROGMEM const char AP[] = "icon";
-//PROGMEM const char CLAVE[] = "72103607";
-PROGMEM const char CLAVE[] = "68b369b8ed";
+PROGMEM const char AP[] = "ALSW";
+//PROGMEM const char AP[] = "icon";
+PROGMEM const char CLAVE[] = "72103607";
+//PROGMEM const char CLAVE[] = "68b369b8ed";
 
 //Configuraciones del servidor remoto
-PROGMEM const char servidor[] = "project.sitec.com.sv";
-//PROGMEM const char servidor[] = "luihost.webgatenetworks.com";
+//PROGMEM const char servidor[] = "project.sitec.com.sv";
+PROGMEM const char servidor[] = "45.40.135.188";
+PROGMEM const char pagina[] = "/project/app/test/insertar";
 const int puertoServidor = 80;
 
 //Descomentar las siguientes definiciones para habilitar los sensores
 //correspondientes. Comentar la definicion implica que no se usara el sensor ni
 //se enviaran sus datos.
-//#define SENSOR_DS18B20
-#define SENSOR_DHT22
-#define SENSOR_MQ2
+#define SENSOR_DS18B20
+//#define SENSOR_DHT22
+//#define SENSOR_MQ2
+
+//Definiciones de los pines del modulo ESP8266
+const int pinEspRx = 11;   //Cactus micro
+const int pinEspTx = 12;
+//const int pinRx = 5;  //Pro mini y micro
+//const int pinTx = 4;
+const int pinEspEn = 13;
 
 //Definiciones de los pines de los diferentes perifericos (no comentar aunque no
 //se usen)
@@ -45,9 +53,9 @@ const int pinMQ2 = 0;       //Numero de pin analogico
 
 //Descomentar para habilitar rutinas (para uso normal deben estar
 //comentadas todas excepto la de envio de datos por wifi)
-//#define ENVIAR_DATOS_WIFI
+#define ENVIAR_DATOS_WIFI
 //#define PUENTE_SERIAL_ESP8266
-#define MOSTRAR_DATOS_SENSORES
+//#define MOSTRAR_DATOS_SENSORES
 
 //FIN DE LOS PARAMETROS CONFIGURABLES
 //--------------------------------------------------------------------------------
@@ -71,7 +79,7 @@ const int pinMQ2 = 0;       //Numero de pin analogico
 #include <SoftwareSerial.h>
 #include "esp8266.h"
 //Instancia de clase de software serial para el modulo wifi
-SoftwareSerial serieWifi(5, 4);
+SoftwareSerial serieWifi(pinEspRx, pinEspTx);
 //Instancia de clase del modulo ESP8266
 ESP8266 esp8266(&serieWifi);
 byte dirIP[4];
@@ -115,10 +123,14 @@ char coreID[17];
 //--------------------------------------------------------------------------------
 void setup(void) {
   //Inicializa la terminal serie
-  Serial.begin(57600);
+  Serial.begin(9600);
+
+  //Habilita el modulo ESP8266
+  pinMode(pinEspEn, OUTPUT);
+  digitalWrite(pinEspEn, HIGH);
 
   //Inicializa el modulo WiFi
-  serieWifi.begin(57600);
+  serieWifi.begin(9600);
   for (;;) {
     Serial.print(F("Inicializando modulo Wifi... "));
     if (esp8266.reset()) { Serial.println(F("OK")); break; }
@@ -286,8 +298,19 @@ bool enviarDato(char *nombre, char *valor) {
     return false;
   }
 
-  if (!esp8266.enviar(F("GET /test/insertar?name="))) {
-  //if (!esp8266.enviar(F("GET /stest.php?name="))) {
+  if (!esp8266.enviar(F("GET "))) {
+    Serial.println(F("Error al enviar datos"));
+    esp8266.desconectar();
+    return false;
+  }
+
+  if (!esp8266.enviar(FSH(pagina))) {
+    Serial.println(F("Error al enviar datos"));
+    esp8266.desconectar();
+    return false;
+  }
+
+  if (!esp8266.enviar(F("?name="))) {
     Serial.println(F("Error al enviar datos"));
     esp8266.desconectar();
     return false;
