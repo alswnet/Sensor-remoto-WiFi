@@ -34,15 +34,15 @@ const int puertoServidor = 80;
 //Descomentar las siguientes definiciones para habilitar los sensores
 //correspondientes. Comentar la definicion implica que no se usara el sensor ni
 //se enviaran sus datos.
-#define SENSOR_DS18B20
-//#define SENSOR_DHT22
-//#define SENSOR_MQ2
+//#define SENSOR_DS18B20
+#define SENSOR_DHT22
+#define SENSOR_MQ2
 
 //Definiciones de los pines del modulo ESP8266
-const int pinEspRx = 11;   //Cactus micro
-const int pinEspTx = 12;
-//const int pinRx = 5;  //Pro mini y micro
-//const int pinTx = 4;
+//const int pinEspRx = 11;   //Cactus micro
+//const int pinEspTx = 12;
+const int pinEspRx = 5;  //Pro mini y micro
+const int pinEspTx = 4;
 const int pinEspEn = 13;
 
 //Definiciones de los pines de los diferentes perifericos (no comentar aunque no
