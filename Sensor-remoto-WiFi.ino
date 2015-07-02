@@ -1,17 +1,3 @@
-//Datos (todo trifasico)
-//KW por fase y total
-//Voltaje por fase
-//CoreID: 0000 + Mac address
-
-//Lista de core IDs:
-//DS1802:
-//  000018FE34A1BC98
-//MQ-2 + DHT22:
-//  000018FE34FEC84A
-//  000018FE34FE3BDD
-//MQ-2:
-//  000018FE34A1433A
-
 //Sensor remoto basado en Arduino Pro Mini (Sparkfun) y Arduino Mini, usando
 //sensores de gas (MQ-2), temperatura+humedad (DHT22) y sensor de
 //temperatura (DS18B20)
@@ -20,10 +6,10 @@
 //INICIO DE LOS PARAMETROS CONFIGURABLES
 
 //Configuraciones de la red WiFi
-PROGMEM const char AP[] = "ALSW";
-//PROGMEM const char AP[] = "icon";
-PROGMEM const char CLAVE[] = "72103607";
-//PROGMEM const char CLAVE[] = "68b369b8ed";
+//PROGMEM const char AP[] = "ALSW";
+PROGMEM const char AP[] = "icon";
+//PROGMEM const char CLAVE[] = "72103607";
+PROGMEM const char CLAVE[] = "68b369b8ed";
 
 //Configuraciones del servidor remoto
 //PROGMEM const char servidor[] = "project.sitec.com.sv";
