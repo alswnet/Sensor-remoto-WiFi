@@ -2,19 +2,25 @@
 
 //Descomentar para hacer que los datos seriales provenientes del esp8266 sean
 //enviados a la terminal serie para depuracion
-//#define DEPURACION_SERIAL_ESP8266
+#define DEPURACION_SERIAL_ESP8266
 
 //Tiempo maximo a esperar el modulo para que termine los comandos
 const unsigned long timeout = 16000;  //Maximo de 16s
 
-ESP8266::ESP8266(SoftwareSerial *puertoSerie)
+ESP8266::ESP8266(SoftwareSerial *puertoSerie, int pinEnable)
 {
   swSerial = puertoSerie;
+  pinEn = pinEnable;
 }
 
 bool ESP8266::reset() {
-  //Envia el comando de inicializacion del modulo
-  swSerial->print(F("AT+RST\r\n"));
+  //Configura el pin de habilitacion como salida de drenador abierto
+  pinMode(pinEn, OUTPUT);
+
+  //Reinicia el modulo pulsando el pin en bajo
+  digitalWrite(pinEn, LOW);
+  delay(10);
+  digitalWrite(pinEn, HIGH);
 
   //Espera la respuesta "ready"
   if (!esperarRespuesta(F("\nready\r\n"))) return false;

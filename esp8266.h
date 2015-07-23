@@ -6,7 +6,7 @@
 
 class ESP8266 {
   public:
-    ESP8266(SoftwareSerial *puertoSerie);
+    ESP8266(SoftwareSerial *puertoSerie, int pinEnable);
     bool reset();
     bool conectarAP(const __FlashStringHelper *ap,
                     const __FlashStringHelper* clave);
@@ -24,6 +24,7 @@ class ESP8266 {
     bool capturarIP();
     bool capturarMAC();
     SoftwareSerial *swSerial;
+    int pinEn;
     byte dirIP[4];
     byte dirMAC[6];
 };

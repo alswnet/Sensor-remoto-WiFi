@@ -1,28 +1,37 @@
-//Sensor remoto basado en Arduino Pro Mini (Sparkfun) y Arduino Mini, usando
-//sensores de gas (MQ-2), temperatura+humedad (DHT22) y sensor de
+//Sensor remoto basado en Arduino Pro Mini (Sparkfun), Arduino Mini y cactus
+//micro, usando sensores de gas (MQ-2), temperatura+humedad (DHT22) y sensor de
 //temperatura (DS18B20)
 
+//Advertencia: Antes de compilar y subir, se aconseja ampliar el buffer de datos
+//de la libreria SoftwareSerial a 256 bytes. Para ello, es necesario abrir y
+//editar el siguiente archivo en arduino ide:
+//  hardware/arduino/avr/libraries/SoftwareSerial/SoftwareSerial.h
+//La linea a modificar es la siguiente:
+//  #define _SS_MAX_RX_BUFF 64 // RX buffer size
+//Cambiar el valor de 64 a 256
 //--------------------------------------------------------------------------------
 //INICIO DE LOS PARAMETROS CONFIGURABLES
 
 //Configuraciones de la red WiFi
-//PROGMEM const char AP[] = "ALSW";
-PROGMEM const char AP[] = "icon";
-//PROGMEM const char CLAVE[] = "72103607";
-PROGMEM const char CLAVE[] = "68b369b8ed";
+PROGMEM const char AP[] = "ALSW";
+//PROGMEM const char AP[] = "icon";
+PROGMEM const char CLAVE[] = "72103607";
+//PROGMEM const char CLAVE[] = "68b369b8ed";
 
 //Configuraciones del servidor remoto
-//PROGMEM const char servidor[] = "project.sitec.com.sv";
+//PROGMEM const char servidor[] = "192.168.1.10";
 PROGMEM const char servidor[] = "45.40.135.188";
-PROGMEM const char pagina[] = "/project/app/test/insertar";
 const int puertoServidor = 80;
+PROGMEM const char pagina[] = "/emoncms";
+//PROGMEM const char apikey[] = "f0eab95e4073c12a90efe523b242cbe2";
+PROGMEM const char apikey[] = "aa9e208a81b9ae180044d3da9c08dfae";
 
 //Descomentar las siguientes definiciones para habilitar los sensores
 //correspondientes. Comentar la definicion implica que no se usara el sensor ni
 //se enviaran sus datos.
-#define SENSOR_DS18B20
-//#define SENSOR_DHT22
-//#define SENSOR_MQ2
+//#define SENSOR_DS18B20
+#define SENSOR_DHT22
+#define SENSOR_MQ2
 
 //Definiciones de los pines del modulo ESP8266
 //const int pinEspRx = 11;   //Cactus micro
@@ -41,7 +50,7 @@ const int pinMQ2 = 0;       //Numero de pin analogico
 //comentadas todas excepto la de envio de datos por wifi)
 #define ENVIAR_DATOS_WIFI
 //#define PUENTE_SERIAL_ESP8266
-//#define MOSTRAR_DATOS_SENSORES
+#define MOSTRAR_DATOS_SENSORES
 
 //FIN DE LOS PARAMETROS CONFIGURABLES
 //--------------------------------------------------------------------------------
@@ -67,17 +76,20 @@ const int pinMQ2 = 0;       //Numero de pin analogico
 //Instancia de clase de software serial para el modulo wifi
 SoftwareSerial serieWifi(pinEspRx, pinEspTx);
 //Instancia de clase del modulo ESP8266
-ESP8266 esp8266(&serieWifi);
+ESP8266 esp8266(&serieWifi, pinEspEn);
 byte dirIP[4];
 byte dirMAC[6];
 
-//Cadena que contendra el core ID
+//Cadena que contendra el ID del nodo
 //  4+  Mascara de identificacion del dispositivo (2 bytes)
 // 12+  MAC address del adaptador WiFi (6 bytes)
 //  1=  Cero terminador
 // ---
 // 17   Total de bytes
-char coreID[17];
+char idNodo[17];
+
+//Bandera que indica si es el primer dato que se envia en la trama GET
+bool primerDato = true;
 
 //--------------------------------------------------------------------------------
 #ifdef SENSOR_DS18B20
@@ -110,10 +122,7 @@ char coreID[17];
 void setup(void) {
   //Inicializa la terminal serie
   Serial.begin(9600);
-
-  //Habilita el modulo ESP8266
-  pinMode(pinEspEn, OUTPUT);
-  digitalWrite(pinEspEn, HIGH);
+  delay(2000);
 
   //Inicializa el modulo WiFi
   serieWifi.begin(9600);
@@ -154,12 +163,12 @@ void setup(void) {
     Serial.print(dirMAC[4], HEX); Serial.print(F(":"));
     Serial.print(dirMAC[5], HEX); Serial.println(F(""));
 
-    //Calcula el core ID de esta unidad
-    calcularCoreID();
+    //Calcula el ID de esta unidad
+    calcularID();
 
     //Imprime el resultado
-    Serial.print(F("Core ID: "));
-    Serial.println(coreID);
+    Serial.print(F("ID del nodo: "));
+    Serial.println(idNodo);
   #endif
 
   //Inicializa el sensor de temperatura DS18B20
@@ -227,26 +236,30 @@ void loop(void) {
     int valor;          //Variables usadas para formatear las lecturas
     char strValor[16];
 
+    //Inicia la conexion con el servidor y envia la cabecera HTTP
+    if (!iniciarConexion()) return;
+
+    //Envia los datos de aquellos sensores que esten habilitados
     #ifdef SENSOR_DS18B20
+      //Multiplica la temperatura por 100 para extraer los digitos antes y despues
+      //del punto
       valor = temp_DS18B20 * 100;
       sprintf(strValor, "%i.%02i", valor / 100, valor % 100);
-      enviarDato("Temperatura", strValor);
+      enviarDato(F("Temperatura"), strValor);
 
       while (serieWifi.available()) Serial.write(serieWifi.read());
     #endif
 
     #ifdef SENSOR_DHT22
-      //Multiplica la temperatura por 100 para extraer los digitos antes y
-      //despues del punto
       valor = temp_DHT22 * 100;
       sprintf(strValor, "%i.%02i", valor / 100, valor % 100);
-      enviarDato("Temperatura", strValor);
+      enviarDato(F("Temperatura"), strValor);
 
       while (serieWifi.available()) Serial.write(serieWifi.read());
 
       valor = hum_DHT22 * 100;
       sprintf(strValor, "%i.%02i", valor / 100, valor % 100);
-      enviarDato("Humedad", strValor);
+      enviarDato(F("Humedad"), strValor);
 
       while (serieWifi.available()) Serial.write(serieWifi.read());
     #endif
@@ -254,36 +267,42 @@ void loop(void) {
     #ifdef SENSOR_MQ2
       valor = ppm_MQ2;
       sprintf(strValor, "%i", valor);
-      enviarDato("ppm", strValor);
+      enviarDato(F("ppm"), strValor);
 
       while (serieWifi.available()) Serial.write(serieWifi.read());
     #endif
+
+    //Termina la cabecera HTTP, capta la respuesta y cierra la conexion
+    terminarConexion();
+
     delay(5000);
   #endif
 }
 
-void calcularCoreID() {
+void calcularID() {
   byte offset = 0;
   byte i;
 
-  strcpy(coreID, "0000");
-  offset = strlen(coreID);
+  strcpy(idNodo, "0000");
+  offset = strlen(idNodo);
 
   for (i=0; i<6; i++) {
-    sprintf(&coreID[offset], "%02X", dirMAC[i]);
-    offset = strlen(coreID);
+    sprintf(&idNodo[offset], "%02X", dirMAC[i]);
+    offset = strlen(idNodo);
   }
 }
 
-bool enviarDato(char *nombre, char *valor) {
+bool iniciarConexion() {
   //Fuerza la desconexion en caso este previamente conectado
   esp8266.desconectar();
 
+  //Inicia la conexion al servidor
   if (!esp8266.conectar(FSH(servidor), puertoServidor)) {
     Serial.println(F("Error al conectar"));
     return false;
   }
 
+  //Envia la cabecera HTTP/GET
   if (!esp8266.enviar(F("GET "))) {
     Serial.println(F("Error al enviar datos"));
     esp8266.desconectar();
@@ -296,19 +315,63 @@ bool enviarDato(char *nombre, char *valor) {
     return false;
   }
 
-  if (!esp8266.enviar(F("?name="))) {
+  if (!esp8266.enviar(F("/input/post.json?apikey="))) {
     Serial.println(F("Error al enviar datos"));
     esp8266.desconectar();
     return false;
   }
 
+  if (!esp8266.enviar(FSH(apikey))) {
+    Serial.println(F("Error al enviar datos"));
+    esp8266.desconectar();
+    return false;
+  }
+
+  if (!esp8266.enviar(F("&node="))) {
+    Serial.println(F("Error al enviar datos"));
+    esp8266.desconectar();
+    return false;
+  }
+
+  if (!esp8266.enviar(idNodo)) {
+    Serial.println(F("Error al enviar datos"));
+    esp8266.desconectar();
+    return false;
+  }
+
+  if (!esp8266.enviar(F("&json={"))) {
+    Serial.println(F("Error al enviar datos"));
+    esp8266.desconectar();
+    return false;
+  }
+
+  //Marca la bandera para que el proximo dato a enviar no se separe del anterior
+  //(que no existe) con una coma
+  primerDato = true;
+
+  return true;
+}
+
+bool enviarDato(const __FlashStringHelper *nombre, char *valor) {
+  //Si la bandera de primer dato esta activa omite la coma, sino la anexa
+  if (primerDato)
+    primerDato = false;
+  else {
+    if (!esp8266.enviar(F(","))) {
+      Serial.println(F("Error al enviar datos"));
+      esp8266.desconectar();
+      return false;
+    }
+  }
+
+  //Envia el nombre del dato seguido de 2 puntos y luego el valor
   if (!esp8266.enviar(nombre)) {
     Serial.println(F("Error al enviar datos"));
     esp8266.desconectar();
     return false;
   }
 
-  if (!esp8266.enviar(F("&value="))) {
+  if (!esp8266.enviar(F(":"))) {
     Serial.println(F("Error al enviar datos"));
     esp8266.desconectar();
     return false;
@@ -319,20 +382,13 @@ bool enviarDato(char *nombre, char *valor) {
     esp8266.desconectar();
     return false;
   }
+}
 
-  if (!esp8266.enviar(F("&coreid="))) {
-    Serial.println(F("Error al enviar datos"));
-    esp8266.desconectar();
-    return false;
-  }
+bool terminarConexion() {
+  unsigned long tInicial;
 
-  if (!esp8266.enviar(coreID)) {
-    Serial.println(F("Error al enviar datos"));
-    esp8266.desconectar();
-    return false;
-  }
-
-  if (!esp8266.enviar(F(" HTTP/1.1\r\nHost: "))) {
+  //Envia el resto de la cabecera HTTP/GET
+  if (!esp8266.enviar(F("} HTTP/1.1\r\nHost: "))) {
     Serial.println(F("Error al enviar datos"));
     esp8266.desconectar();
     return false;
@@ -344,12 +400,22 @@ bool enviarDato(char *nombre, char *valor) {
     return false;
   }
 
-  if (!esp8266.enviar(F("\r\n\r\n"))) {
+  if (!esp8266.enviar(F("\r\nConnection: close\r\n\r\n"))) {
     Serial.println(F("Error al enviar datos"));
     esp8266.desconectar();
     return false;
   }
 
-  delay(1000);
+  //Espera durante un segundo la respuesta del servidor y la imprime en terminal
+  //serie
+  tInicial = millis();
+  while(millis() - tInicial < 1000) {
+    if (serieWifi.available())
+      Serial.write(serieWifi.read());
+  }
+
+  //Cierra la conexion (por si el servidor no la cerro)
   esp8266.desconectar();
+  return true;
 }
+
