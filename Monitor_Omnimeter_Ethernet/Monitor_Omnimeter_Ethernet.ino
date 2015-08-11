@@ -104,13 +104,13 @@ void mostrarMediciones() {
   Serial.print(F(" - A2: "));
   Serial.print(cadena);
   
-  medidor.leerParametro(cadena, PO_V3);
-  Serial.print(F("V3: "));
-  Serial.print(cadena);
+ // medidor.leerParametro(cadena, PO_V3);
+ // Serial.print(F("V3: "));
+ // Serial.print(cadena);
 
-  medidor.leerParametro(cadena, PO_A3);
-  Serial.print(F(" - A3: "));
-  Serial.print(cadena);
+ // medidor.leerParametro(cadena, PO_A3);
+ // Serial.print(F(" - A3: "));
+ // Serial.print(cadena);
   
   medidor.leerParametro(cadena, PO_PF1);
   Serial.print(F(" - PF1: "));
@@ -150,11 +150,11 @@ void enviarMediciones() {
     enviarParametro(F("V2"), cadena, false);
     medidor.leerParametro(cadena, PO_A2);
     enviarParametro(F("A2"), cadena, false);
-    medidor.leerParametro(cadena, PO_V3);
-    enviarParametro(F("V3"), cadena, false);
-    medidor.leerParametro(cadena, PO_A3);
-    enviarParametro(F("A3"), cadena, false);
-    medidor.leerParametro(cadena, PO_PF1);
+    //medidor.leerParametro(cadena, PO_V3);
+    //enviarParametro(F("V3"), cadena, false);
+    //medidor.leerParametro(cadena, PO_A3);
+    //enviarParametro(F("A3"), cadena, false);
+    //medidor.leerParametro(cadena, PO_PF1);
     enviarParametro(F("PF1"), &cadena[1], false);
 
     //Finaliza la solicitud HTTP
