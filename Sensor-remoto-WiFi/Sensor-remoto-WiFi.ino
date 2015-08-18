@@ -13,9 +13,11 @@
 //INICIO DE LOS PARAMETROS CONFIGURABLES
 
 //Configuraciones de la red WiFi
-PROGMEM const char AP[] = "ALSW";
+//PROGMEM const char AP[] = "ALSW";
+PROGMEM const char AP[] = "DISZASA-PI";
 //PROGMEM const char AP[] = "icon";
-PROGMEM const char CLAVE[] = "72103607";
+//PROGMEM const char CLAVE[] = "72103607";
+PROGMEM const char CLAVE[] = "mistic0$";
 //PROGMEM const char CLAVE[] = "68b369b8ed";
 
 //Configuraciones del servidor remoto
@@ -29,15 +31,15 @@ PROGMEM const char apikey[] = "aa9e208a81b9ae180044d3da9c08dfae";
 //Descomentar las siguientes definiciones para habilitar los sensores
 //correspondientes. Comentar la definicion implica que no se usara el sensor ni
 //se enviaran sus datos.
-//#define SENSOR_DS18B20
-#define SENSOR_DHT22
-#define SENSOR_MQ2
+#define SENSOR_DS18B20
+//#define SENSOR_DHT22
+//#define SENSOR_MQ2
 
 //Definiciones de los pines del modulo ESP8266
-//const int pinEspRx = 11;   //Cactus micro
-//const int pinEspTx = 12;
-const int pinEspRx = 5;  //Pro mini y micro
-const int pinEspTx = 4;
+const int pinEspRx = 11;   //Cactus micro
+const int pinEspTx = 12;
+//const int pinEspRx = 5;  //Pro mini y micro
+//const int pinEspTx = 4;
 const int pinEspEn = 13;
 
 //Definiciones de los pines de los diferentes perifericos (no comentar aunque no
