@@ -20,7 +20,7 @@ const char servidor[] = "45.40.135.188";
 const int puertoServidor = 80;
 //PROGMEM const char apikey[] = "f0eab95e4073c12a90efe523b242cbe2";
 PROGMEM const char apikey[] = "aa9e208a81b9ae180044d3da9c08dfae";
-PROGMEM const char nodo[] = "Alimentos_MOR";
+PROGMEM const char nodo[] = "Demo_Energia";
 
 //Definicion de los pines conectados al omnimeter via convertidor de
 //nivel RS-485
@@ -96,22 +96,6 @@ void mostrarMediciones() {
   Serial.print(F(" - A1: "));
   Serial.print(cadena);
 
-  medidor.leerParametro(cadena, PO_V2);
-  Serial.print(F("V2: "));
-  Serial.print(cadena);
-
-  medidor.leerParametro(cadena, PO_A2);
-  Serial.print(F(" - A2: "));
-  Serial.print(cadena);
-  
- // medidor.leerParametro(cadena, PO_V3);
- // Serial.print(F("V3: "));
- // Serial.print(cadena);
-
- // medidor.leerParametro(cadena, PO_A3);
- // Serial.print(F(" - A3: "));
- // Serial.print(cadena);
-  
   medidor.leerParametro(cadena, PO_PF1);
   Serial.print(F(" - PF1: "));
   Serial.println(&cadena[1]);
@@ -146,15 +130,7 @@ void enviarMediciones() {
     enviarParametro(F("V1"), cadena, false);
     medidor.leerParametro(cadena, PO_A1);
     enviarParametro(F("A1"), cadena, false);
-    medidor.leerParametro(cadena, PO_V2);
-    enviarParametro(F("V2"), cadena, false);
-    medidor.leerParametro(cadena, PO_A2);
-    enviarParametro(F("A2"), cadena, false);
-    //medidor.leerParametro(cadena, PO_V3);
-    //enviarParametro(F("V3"), cadena, false);
-    //medidor.leerParametro(cadena, PO_A3);
-    //enviarParametro(F("A3"), cadena, false);
-    //medidor.leerParametro(cadena, PO_PF1);
+    medidor.leerParametro(cadena, PO_PF1);
     enviarParametro(F("PF1"), &cadena[1], false);
 
     //Finaliza la solicitud HTTP
@@ -194,3 +170,4 @@ void enviarParametro(const __FlashStringHelper *nombre, char *valor, bool inicia
   cliente.print(':');
   cliente.print(valor);
 }
+
