@@ -16,10 +16,13 @@ IPAddress ip(192, 168, 1, 100);
 
 //Configuraciones del servidor remoto
 //const char servidor[] = "10.42.0.84";
-const char servidor[] = "45.40.135.188";
+//const char servidor[] = "45.40.135.188";
+const char servidor[] = "emoncms.org";
+
 const int puertoServidor = 80;
 //PROGMEM const char apikey[] = "f0eab95e4073c12a90efe523b242cbe2";
-PROGMEM const char apikey[] = "aa9e208a81b9ae180044d3da9c08dfae";
+//PROGMEM const char apikey[] = "aa9e208a81b9ae180044d3da9c08dfae";
+PROGMEM const char apikey[] = "e5e0b045c4166257220de91d3195960f";
 PROGMEM const char nodo[] = "Demo_Energia";
 
 //Definicion de los pines conectados al omnimeter via convertidor de
@@ -115,7 +118,8 @@ void enviarMediciones() {
     Serial.println(F("OK"));
 
     //Se envia la cadena de solicitud de pagina con los datos a enviar
-    cliente.print(F("GET /emoncms/input/post.json?apikey="));
+    //cliente.print(F("GET /emoncms/input/post.json?apikey="));
+    cliente.print(F("GET /input/post.json?apikey="));
     cliente.print(FSH(apikey));             //Anexa la apikey del usuario
     cliente.print(F("&node="));
     cliente.print(FSH(nodo));               //Anexa el identificador de nodo
