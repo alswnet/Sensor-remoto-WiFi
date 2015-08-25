@@ -280,7 +280,7 @@ void loop(void) {
     //Termina la cabecera HTTP, capta la respuesta y cierra la conexion
     terminarConexion();
 
-    delay(5000);
+    delay(10000);
   #endif
 }
 

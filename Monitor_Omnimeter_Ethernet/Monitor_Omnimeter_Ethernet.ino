@@ -77,7 +77,7 @@ void loop() {
   enviarMediciones();
   digitalWrite(pinLedComunicacion, LOW);
 
-  delay(5000);
+  delay(10000);
 }
 
 void mostrarMediciones() {
