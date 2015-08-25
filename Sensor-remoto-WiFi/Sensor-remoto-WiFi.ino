@@ -14,11 +14,11 @@
 
 //Configuraciones de la red WiFi
 //PROGMEM const char AP[] = "ALSW";
-PROGMEM const char AP[] = "DISZASA-PI";
-//PROGMEM const char AP[] = "icon";
+//PROGMEM const char AP[] = "DISZASA-PI";
+PROGMEM const char AP[] = "icon";
 //PROGMEM const char CLAVE[] = "72103607";
-PROGMEM const char CLAVE[] = "mistic0$";
-//PROGMEM const char CLAVE[] = "68b369b8ed";
+//PROGMEM const char CLAVE[] = "mistic0$";
+PROGMEM const char CLAVE[] = "68b369b8ed";
 
 //Configuraciones del servidor remoto
 //PROGMEM const char servidor[] = "192.168.1.10";
@@ -36,13 +36,13 @@ PROGMEM const char apikey[] = "d5c746f11b3d2b34ba192ab8f22efe87";
 //se enviaran sus datos.
 #define SENSOR_DS18B20
 //#define SENSOR_DHT22
-//#define SENSOR_MQ2
+#define SENSOR_MQ2
 
 //Definiciones de los pines del modulo ESP8266
-const int pinEspRx = 11;   //Cactus micro
-const int pinEspTx = 12;
-//const int pinEspRx = 5;  //Pro mini y micro
-//const int pinEspTx = 4;
+//const int pinEspRx = 11;   //Cactus micro
+//const int pinEspTx = 12;
+const int pinEspRx = 5;  //Pro mini y micro
+const int pinEspTx = 4;
 const int pinEspEn = 13;
 
 //Definiciones de los pines de los diferentes perifericos (no comentar aunque no
