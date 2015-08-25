@@ -119,7 +119,7 @@ void enviarMediciones() {
 
     //Se envia la cadena de solicitud de pagina con los datos a enviar
     //cliente.print(F("GET /emoncms/input/post.json?apikey="));
-    cliente.print(F("GET sees/input/post.json?apikey="));
+    cliente.print(F("GET /sees/input/post.json?apikey="));
     cliente.print(FSH(apikey));             //Anexa la apikey del usuario
     cliente.print(F("&node="));
     cliente.print(FSH(nodo));               //Anexa el identificador de nodo
