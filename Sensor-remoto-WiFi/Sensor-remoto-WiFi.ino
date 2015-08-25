@@ -22,11 +22,14 @@ PROGMEM const char CLAVE[] = "mistic0$";
 
 //Configuraciones del servidor remoto
 //PROGMEM const char servidor[] = "192.168.1.10";
-PROGMEM const char servidor[] = "45.40.135.188";
+//PROGMEM const char servidor[] = "45.40.135.188";
+PROGMEM const char servidor[] = "50.116.76.54";
 const int puertoServidor = 80;
-PROGMEM const char pagina[] = "/emoncms";
+//PROGMEM const char pagina[] = "/emoncms";
+PROGMEM const char pagina[] = "/sees";
 //PROGMEM const char apikey[] = "f0eab95e4073c12a90efe523b242cbe2";
-PROGMEM const char apikey[] = "aa9e208a81b9ae180044d3da9c08dfae";
+//PROGMEM const char apikey[] = "aa9e208a81b9ae180044d3da9c08dfae";
+PROGMEM const char apikey[] = "d5c746f11b3d2b34ba192ab8f22efe87";
 
 //Descomentar las siguientes definiciones para habilitar los sensores
 //correspondientes. Comentar la definicion implica que no se usara el sensor ni
