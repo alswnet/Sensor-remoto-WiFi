@@ -36,13 +36,13 @@ PROGMEM const char apikey[] = "d5c746f11b3d2b34ba192ab8f22efe87";
 //se enviaran sus datos.
 #define SENSOR_DS18B20
 //#define SENSOR_DHT22
-#define SENSOR_MQ2
+//#define SENSOR_MQ2
 
 //Definiciones de los pines del modulo ESP8266
-//const int pinEspRx = 11;   //Cactus micro
-//const int pinEspTx = 12;
-const int pinEspRx = 5;  //Pro mini y micro
-const int pinEspTx = 4;
+const int pinEspRx = 11;   //Cactus micro
+const int pinEspTx = 12;
+//const int pinEspRx = 5;  //Pro mini y micro
+//const int pinEspTx = 4;
 const int pinEspEn = 13;
 
 //Definiciones de los pines de los diferentes perifericos (no comentar aunque no
