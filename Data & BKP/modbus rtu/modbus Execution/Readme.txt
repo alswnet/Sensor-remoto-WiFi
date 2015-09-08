@@ -1,0 +1,1 @@
+Open "MSCOMREG.bat"
