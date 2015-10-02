@@ -13,22 +13,18 @@
 //INICIO DE LOS PARAMETROS CONFIGURABLES
 
 //Configuraciones de la red WiFi
-//PROGMEM const char AP[] = "ALSW";
 //PROGMEM const char AP[] = "DISZASA-PI";
 PROGMEM const char AP[] = "icon";
-//PROGMEM const char CLAVE[] = "72103607";
 //PROGMEM const char CLAVE[] = "mistic0$";
 PROGMEM const char CLAVE[] = "68b369b8ed";
 
 //Configuraciones del servidor remoto
-//PROGMEM const char servidor[] = "192.168.1.10";
-//PROGMEM const char servidor[] = "45.40.135.188";
+//PROGMEM const char servidor[] = "10.0.10.12";
 PROGMEM const char servidor[] = "50.116.76.54";
 const int puertoServidor = 80;
 //PROGMEM const char pagina[] = "/emoncms";
 PROGMEM const char pagina[] = "/sees";
-//PROGMEM const char apikey[] = "f0eab95e4073c12a90efe523b242cbe2";
-//PROGMEM const char apikey[] = "aa9e208a81b9ae180044d3da9c08dfae";
+//PROGMEM const char apikey[] = "e1df8e9be3f7cb0e2bd569e1245f1bc5";
 PROGMEM const char apikey[] = "d5c746f11b3d2b34ba192ab8f22efe87";
 
 //Descomentar las siguientes definiciones para habilitar los sensores
