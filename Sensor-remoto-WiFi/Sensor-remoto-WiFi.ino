@@ -30,8 +30,8 @@ PROGMEM const char apikey[] = "d5c746f11b3d2b34ba192ab8f22efe87";
 //Descomentar las siguientes definiciones para habilitar los sensores
 //correspondientes. Comentar la definicion implica que no se usara el sensor ni
 //se enviaran sus datos.
-//#define SENSOR_DS18B20
-#define SENSOR_DHT22
+#define SENSOR_DS18B20
+//#define SENSOR_DHT22
 #define SENSOR_MQ2
 
 //Definiciones de los pines del modulo ESP8266
