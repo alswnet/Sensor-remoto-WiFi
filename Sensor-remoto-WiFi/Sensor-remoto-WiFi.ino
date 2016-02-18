@@ -13,25 +13,22 @@
 //INICIO DE LOS PARAMETROS CONFIGURABLES
 
 //Configuraciones de la red WiFi
-//PROGMEM const char AP[] = "DISZASA-PI";
 PROGMEM const char AP[] = "icon";
-//PROGMEM const char CLAVE[] = "mistic0$";
 PROGMEM const char CLAVE[] = "68b369b8ed";
 
 //Configuraciones del servidor remoto
-//PROGMEM const char servidor[] = "10.0.10.12";
-PROGMEM const char servidor[] = "50.116.76.54";
+//PROGMEM const char servidor[] = "162.243.114.9";
+PROGMEM const char servidor[] = "proyectosees.com";
 const int puertoServidor = 80;
-//PROGMEM const char pagina[] = "/emoncms";
+//PROGMEM const char pagina[] = "/test.php";
 PROGMEM const char pagina[] = "/sees";
-//PROGMEM const char apikey[] = "e1df8e9be3f7cb0e2bd569e1245f1bc5";
-PROGMEM const char apikey[] = "d5c746f11b3d2b34ba192ab8f22efe87";
+PROGMEM const char apikey[] = "2085dce8c71b428b9410352f8e9c8b15";
 
 //Descomentar las siguientes definiciones para habilitar los sensores
 //correspondientes. Comentar la definicion implica que no se usara el sensor ni
 //se enviaran sus datos.
-#define SENSOR_DS18B20
-//#define SENSOR_DHT22
+//#define SENSOR_DS18B20
+#define SENSOR_DHT22
 #define SENSOR_MQ2
 
 //Definiciones de los pines del modulo ESP8266
@@ -345,7 +342,7 @@ bool iniciarConexion() {
     esp8266.desconectar();
     return false;
   }
-
+  
   //Marca la bandera para que el proximo dato a enviar no se separe del anterior
   //(que no existe) con una coma
   primerDato = true;

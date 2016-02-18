@@ -15,14 +15,11 @@ byte mac[] = { 0x18, 0xFE, 0x34, 0xFE, 0x3B, 0xD1 };
 IPAddress ip(192, 168, 1, 100);
 
 //Configuraciones del servidor remoto
-//const char servidor[] = "10.42.0.84";
-//const char servidor[] = "45.40.135.188";
-const char servidor[] = "50.116.76.54";
+//const char servidor[] = "162.243.114.9";
+const char servidor[] = "proyectosees.com";
 
 const int puertoServidor = 80;
-//PROGMEM const char apikey[] = "f0eab95e4073c12a90efe523b242cbe2";
-//PROGMEM const char apikey[] = "aa9e208a81b9ae180044d3da9c08dfae";
-PROGMEM const char apikey[] = "d5c746f11b3d2b34ba192ab8f22efe87";
+PROGMEM const char apikey[] = "2085dce8c71b428b9410352f8e9c8b15";
 PROGMEM const char nodo[] = "Demo_Energia";
 
 //Definicion de los pines conectados al omnimeter via convertidor de
@@ -118,7 +115,7 @@ void enviarMediciones() {
     Serial.println(F("OK"));
 
     //Se envia la cadena de solicitud de pagina con los datos a enviar
-    //cliente.print(F("GET /emoncms/input/post.json?apikey="));
+    //cliente.print(F("GET /test.php"));
     cliente.print(F("GET /sees/input/post.json?apikey="));
     cliente.print(FSH(apikey));             //Anexa la apikey del usuario
     cliente.print(F("&node="));
